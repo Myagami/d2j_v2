@@ -5,7 +5,7 @@ use warnings ;
 use lib '/home/hayate/Tools/d2j_v2/' ;
 use lib::d2j ;
 use Getopt::Long 'GetOptions';
-
+use Data::Dumper ;
 
 #引数受取
 my $cnf = "monitor" ;
@@ -26,5 +26,14 @@ print "Out:".$out_f."\n" ;
 print "Dump:".$dmp_f."\n" ;
 
 #処理開始
+#データ読込
 my $d2j = lib::d2j->new() ;
-$d2j->Load_ConfigFile($cnf) ;
+my %cnf_cont = $d2j->Load_ConfigFile($cnf) ;
+print "-"x20 ;
+print "\n"  ;
+my @work_files = $d2j->Get_DatList() ;
+#print Dumper(@work_files) ;
+my @names = $d2j->Get_Name(@work_files) ;
+my @names_jp = $d2j->Translate_jp(@names) ;
+print Dumper(@names) ;
+

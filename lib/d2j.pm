@@ -12,24 +12,53 @@ sub Load_ConfigFile{#設定ファイル読み込み
     my $cnf_p = shift ;
     print $cnf_p."\n" ;
 
-    my $data = Parse_Data($cnf_p) ;
+    return Parse_Data($cnf_p) ;
     sub Parse_Data{
 	my $cnf_p = shift ;
-	my $cnf_d = Null ;
+	my %cnf_d = Null ;
 	my $cnf_k = Null ;
 	open(my $file_h,"<","./".$cnf_p) or die("File can't open") ;	
 	while(my $line =  readline($file_h)){
-	    chomp($line) ;
+	    chomp($line) ;	
 	    if($line =~ /\-{3}\[([A-z]{1,})\]-{3}/){
-		print "Cont:".$line."\n" ;
+		print "Cont:".$1."\n" ;
 		$cnf_k = $1 ;
-	    }else{
+	    }elsif($line =~ /^([A-z0-9]{1,}) = (.*)$/){
+		$cnf_d{$cnf_k}{$1}  = $2 ;
 		print $cnf_k.":" ;
-		print $line."\n" ;
-		
+		print $1."\n" ;
+		print "Trans:".$2."\n" ;
+	    }
+	}
+	return %cnf_d ;
+    }
+}
+
+#datを取得する
+sub Get_DatList{
+    return glob "*.dat" ;
+}
+
+sub Get_Name{#名前を取得する
+    my $self = shift ;
+    my @dats =  @_ ;
+    my @names ;
+    foreach my $dat(@dats){
+	#print $dat."\n" ;
+	open(my $file_h,"<","./".$dat) or die("File can't open") ;
+	while(my $line =  readline($file_h)){
+	    chomp($line) ;
+	    if($line =~ /name=(.*)/){
+		push(@names,$1) ;
 	    }
 	}
     }
+    return @names ;
+}
+
+#日本語訳
+sub Translate_jp{
+    
 }
 
 1;
