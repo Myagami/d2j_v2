@@ -28,12 +28,10 @@ print "Dump:".$dmp_f."\n" ;
 #処理開始
 #データ読込
 my $d2j = lib::d2j->new() ;
-my %cnf_cont = $d2j->Load_ConfigFile($cnf) ;
+my $cnf_d = $d2j->Load_ConfigFile($cnf) ;
 print "-"x20 ;
 print "\n"  ;
 my @work_files = $d2j->Get_DatList() ;
 #print Dumper(@work_files) ;
 my @names = $d2j->Get_Name(@work_files) ;
 my @names_jp = $d2j->Translate_jp(@names) ;
-print Dumper(@names) ;
-
