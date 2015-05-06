@@ -19,9 +19,12 @@ GetOptions(
     'dump=s' => \$dmp_f,
  );
 
-
+#テスト出力
 print "Conf:".$cnf."\n" ;
 print "input:".$input_f."\n" ;
 print "Out:".$out_f."\n" ;
 print "Dump:".$dmp_f."\n" ;
 
+#処理開始
+my $d2j = lib::d2j->new() ;
+$d2j->Load_ConfigFile($cnf) ;
