@@ -18,7 +18,7 @@ sub Load_ConfigFile{#設定ファイル読み込み
 	my $cnf_p = shift ;
 	my %cnf_d ;
 	my $cnf_k = Null ;
-	open(my $file_h,"<","./".$cnf_p) or die("File can't open") ;	
+	open(my $file_h,"<","/home/hayate/Tools/d2j_v2/config/".$cnf_p.".conf") or die("File can't open") ;	
 	while(my $line =  readline($file_h)){
 	    chomp($line) ;	
 	    if($line =~ /\-{3}\[([A-z]{1,})\]-{3}/){
