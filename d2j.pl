@@ -35,3 +35,13 @@ my @work_files = $d2j->Get_DatList() ;
 #print Dumper(@work_files) ;
 my @names = $d2j->Get_Name(@work_files) ;
 my @names_jp = $d2j->Translate_jp(@names) ;
+
+
+my $i = 0 ; 
+#while($i < $#names){
+#    print $names[$i]."\n" ;
+#    print $names_jp[$i]."\n" ;
+#    $i++ ;
+#}
+
+#print "Count:".$#names.":".$#names_jp."\n" ;
