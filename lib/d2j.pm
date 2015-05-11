@@ -67,12 +67,10 @@ sub Translate_jp{
     my $self = shift ;
     my @jp_name ;
     my @names = @_ ;
-    print Data::Dumper::Dumper(%conf) ;
-    print "Translate jp.\n" ;
 
     #翻訳用フォーマットキー取得
     @Format_Key = split(/,/,$conf{"Format"}{"Key"}) ;
-    print Data::Dumper::Dumper(@Format_Key)."\n" ;
+    #print Data::Dumper::Dumper(@Format_Key)."\n" ;
 
 
     #データ取得
@@ -81,10 +79,14 @@ sub Translate_jp{
 	my %name_Ad = GetData($name_d) ;
 	#$name_Ad{"Camp"} = Campany($name_Ad{"Camp"}) ;
 	&Campany(\$name_Ad{"Camp"}) ;
-	push(@jp_name,%name_Ad);
+	&TypeCar(\$name_Ad{"Type"}) ;
+	&SeriesCar(\$name_Ad{"Series"}) ;
+	&Name_Replace(\$name_Ad{"Replace"}) ;
+	my $name_Fm = &Format_Embed(\%name_Ad) ;
+	push(@jp_name,$name_Fm);
     }
 
-    print Data::Dumper::Dumper(@jp_name)."\n" ;
+    #print Data::Dumper::Dumper(@jp_name)."\n" ;
 
     return @jp_name ;
 
@@ -100,35 +102,34 @@ sub Translate_jp{
 	#print Data::Dumper::Dumper(@match)."\n" ;
 	my $i = 0 ;
 
-	while($i < $#Format_Key){
-	    #print $match[$i]."\n" ;
-	    #print $Format_Key[$i]."\n" ;
+	while($i+1 < $#Format_Key+2){#取得したデータをハッシュに格納する
+	    print $i.":" ;
+	    print $Format_Key[$i].":" ;
+	    print $match[$i]."\n" ;
+	    
 	    $Name_Ad{$Format_Key[$i]} = $match[$i] ;
 	    $i++ ;
 	}
-	
-	#print Data::Dumper::Dumper(%Name_Ad) ;
 
 	return %Name_Ad ;
+    }
+    sub Campany{#会社名
+	my $name = shift ;
+	$$name =  $conf{"Campany"}{$$name} ;
     }
 
     sub TypeCar{
 	my $name = shift ;
-	if(!undef($conf{"Type"})){
+	if(undef($conf{"Type"})){
 	    $$name = $conf{"Type"}{$$name}
 	}
     }
 
     sub SeriesCar{
 	my $name = shift ;
-	if(!undef($conf{"Series"})){
+	if(undef($conf{"Series"})){
 	    $$name = $conf{"Series"}{$$name}
 	}
-    }
-
-    sub Campany{#会社名
-	my $name = shift ;
-	$$name =  $conf{"Campany"}{$$name} ;
     }
 
     sub Car_Type{#車両型式
@@ -136,14 +137,24 @@ sub Translate_jp{
 	$$name =  $conf{"Type"}{$$name} ;
     }
 
-    sub Name_replace{#置換
+    sub Name_Replace{#置換
 	my $name = shift ;
-	
+	if(undef($conf{"Replace"})){
+	    $$name = $conf{"Replace"}{$$name}
+	}
     }
 
     sub Format_Embed{
-	my $name = shift ;
-	
+	my $data = shift ;
+	my $outd = $conf{"Format"}{"Out"} ; 
+	foreach my $key(keys($data)){
+	    $outd =~ s/\[$key\]/$$data{$key}/ ;
+	    #print "Key:".$key."/ Val:".$$data{$key}."\n" ;
+	}
+
+	print "---"x10 ;
+	print "\n" ;
+	return $outd ;
     }
 }
 
