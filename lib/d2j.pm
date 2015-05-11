@@ -1,5 +1,6 @@
 package lib::d2j ;
 our %conf ;
+local @Format_Key ;
 sub new{#インスタンス生成
     my $pak = shift ;
     my $hash = {
@@ -44,6 +45,7 @@ sub Get_Name{#名前を取得する
     my $self = shift ;
     my @dats =  @_ ;
     my @names ;
+
     foreach my $dat(@dats){
 	#print $dat."\n" ;
 	open(my $file_h,"<","./".$dat) or die("File can't open") ;
@@ -53,6 +55,7 @@ sub Get_Name{#名前を取得する
 		push(@names,$1) ;
 	    }
 	}
+	close($file_h) ;
     }
     return @names ;
 }
@@ -60,21 +63,28 @@ sub Get_Name{#名前を取得する
 #日本語訳
 sub Translate_jp{
     #変数宣言
+    local @Format_Key ;
     my $self = shift ;
     my @jp_name ;
     my @names = @_ ;
     print Data::Dumper::Dumper(%conf) ;
     print "Translate jp.\n" ;
-    
 
+    #翻訳用フォーマットキー取得
+    @Format_Key = split(/,/,$conf{"Format"}{"Key"}) ;
+    print Data::Dumper::Dumper(@Format_Key)."\n" ;
+
+
+    #データ取得
     foreach my $name_d(@names){
 	#print $name_d."\n" ;
 	my %name_Ad = GetData($name_d) ;
-	$name_d = Campany($name_d) ;
-	$name_d = Car_Type($name_d) ;
-	$name_d = Name_replace($name_d) ;
-	push(@jp_name,$name_d) ;
+	#$name_Ad{"Camp"} = Campany($name_Ad{"Camp"}) ;
+	&Campany(\$name_Ad{"Camp"}) ;
+	push(@jp_name,%name_Ad);
     }
+
+    print Data::Dumper::Dumper(@jp_name)."\n" ;
 
     return @jp_name ;
 
@@ -83,28 +93,47 @@ sub Translate_jp{
 	#データ受取
 	my $name = shift ;
 	my $In_Reg =  $conf{"Format"}{"In"} ;
-	#print $In_Reg ; 
-
+	my %Name_Ad ;
 	#データ処理
+	#正規表現で取得
 	my @match = $name =~ /${In_Reg}/ ;
-	print $#match."\n" ;
+	#print Data::Dumper::Dumper(@match)."\n" ;
+	my $i = 0 ;
 
-	
-	foreach my $mat_1(@match){
-	    print "-".$mat_1."\n" ;
+	while($i < $#Format_Key){
+	    #print $match[$i]."\n" ;
+	    #print $Format_Key[$i]."\n" ;
+	    $Name_Ad{$Format_Key[$i]} = $match[$i] ;
+	    $i++ ;
 	}
-	print "----\n" ;
-	#print $1.":".$2.":".$3.":".$4."\n" ;
+	
+	#print Data::Dumper::Dumper(%Name_Ad) ;
+
+	return %Name_Ad ;
+    }
+
+    sub TypeCar{
+	my $name = shift ;
+	if(!undef($conf{"Type"})){
+	    $$name = $conf{"Type"}{$$name}
+	}
+    }
+
+    sub SeriesCar{
+	my $name = shift ;
+	if(!undef($conf{"Series"})){
+	    $$name = $conf{"Series"}{$$name}
+	}
     }
 
     sub Campany{#会社名
 	my $name = shift ;
-	
+	$$name =  $conf{"Campany"}{$$name} ;
     }
 
     sub Car_Type{#車両型式
 	my $name = shift ;
-	
+	$$name =  $conf{"Type"}{$$name} ;
     }
 
     sub Name_replace{#置換
