@@ -25,14 +25,14 @@ sub Load_ConfigFile{#設定ファイル読み込み
 	    if($line =~ /\-{3}\[([A-z]{1,})\]-{3}/){
 		print "Cont:".$1."\n" ;
 		$cnf_k = $1 ;
-	    }elsif($line =~ /^([A-z0-9]{1,}) = (.*)$/){
+	    }elsif($line =~ /^([A-z0-9_]{1,}) = (.*)$/){
 		$cnf_d{$cnf_k}{$1} = $2 ;
 		print $cnf_k.":" ;
 		print $1."\n" ;
 		print "Trans:".$2."\n" ;
 	    }
 	}
-	#print Data::Dumper::Dumper(%cnf_d) ;
+	print Data::Dumper::Dumper(%cnf_d) ;
 	return %cnf_d ;
     }
 }
@@ -103,10 +103,6 @@ sub Translate_jp{
 	my $i = 0 ;
 
 	while($i+1 < $#Format_Key+2){#取得したデータをハッシュに格納する
-	    print $i.":" ;
-	    print $Format_Key[$i].":" ;
-	    print $match[$i]."\n" ;
-	    
 	    $Name_Ad{$Format_Key[$i]} = $match[$i] ;
 	    $i++ ;
 	}
@@ -139,8 +135,14 @@ sub Translate_jp{
 
     sub Name_Replace{#置換
 	my $name = shift ;
-	if(undef($conf{"Replace"})){
-	    $$name = $conf{"Replace"}{$$name}
+	if(exists($conf{"Replace"})){
+	    foreach my $repl(keys($conf{"Replace"})){
+		my $repl_j = $conf{"Replace"}{$repl} ;
+		$repl =~ s/_/ /;
+		$$name =~ s/$repl/$repl_j/ ;
+	    }
+	}else{
+	    
 	}
     }
 
@@ -151,9 +153,6 @@ sub Translate_jp{
 	    $outd =~ s/\[$key\]/$$data{$key}/ ;
 	    #print "Key:".$key."/ Val:".$$data{$key}."\n" ;
 	}
-
-	print "---"x10 ;
-	print "\n" ;
 	return $outd ;
     }
 }

@@ -42,9 +42,6 @@ open(my $file_h,">",$out_f) or die("File can't open") ;
 
 my $i = 0 ; 
 while($i < $#names){
-    print $names[$i]."\n" ;
-    print $names_jp[$i]."\n" ;
-
     print $file_h $names[$i]."\n" ;
     print $file_h $names_jp[$i]."\n" ;
     $i++ ;
