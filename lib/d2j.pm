@@ -69,14 +69,37 @@ sub Translate_jp{
 
     foreach my $name_d(@names){
 	#print $name_d."\n" ;
+	my %name_Ad = GetData($name_d) ;
 	$name_d = Campany($name_d) ;
 	$name_d = Car_Type($name_d) ;
 	$name_d = Name_replace($name_d) ;
+	push(@jp_name,$name_d) ;
     }
 
+    return @jp_name ;
+
     #内部関数
+    sub GetData{
+	#データ受取
+	my $name = shift ;
+	my $In_Reg =  $conf{"Format"}{"In"} ;
+	#print $In_Reg ; 
+
+	#データ処理
+	my @match = $name =~ /${In_Reg}/ ;
+	print $#match."\n" ;
+
+	
+	foreach my $mat_1(@match){
+	    print "-".$mat_1."\n" ;
+	}
+	print "----\n" ;
+	#print $1.":".$2.":".$3.":".$4."\n" ;
+    }
+
     sub Campany{#会社名
 	my $name = shift ;
+	
     }
 
     sub Car_Type{#車両型式
@@ -89,7 +112,10 @@ sub Translate_jp{
 	
     }
 
-    
+    sub Format_Embed{
+	my $name = shift ;
+	
+    }
 }
 
 1;
