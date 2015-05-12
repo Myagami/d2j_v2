@@ -146,7 +146,11 @@ sub Translate_jp{
 	}
     }
 
-    sub Format_Embed{
+    sub Unset_Key_Check{#独自定義されたキーの処理を行う
+	
+    }
+
+    sub Format_Embed{#フォーマットに沿って
 	my $data = shift ;
 	my $outd = $conf{"Format"}{"Out"} ; 
 	foreach my $key(keys($data)){

@@ -12,11 +12,13 @@ my $cnf = "monitor" ;
 my $input_f = "./" ;
 my $out_f = "out.txt" ;
 my $dmp_f = "dump.txt" ;
+my $nest_f = 0 ;
 GetOptions(
     'conf=s' => \$cnf ,
     'input=s' => \$input_f,
     'out=s' => \$out_f,
     'dump=s' => \$dmp_f,
+    'nest=s' => \$nest_f,
  );
 
 #テスト出力
