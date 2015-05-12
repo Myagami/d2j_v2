@@ -41,7 +41,7 @@ my @names_jp = $d2j->Translate_jp(@names) ;
 open(my $file_h,">",$out_f) or die("File can't open") ;
 
 my $i = 0 ; 
-while($i < $#names){
+while($i < $#names+1){
     print $file_h $names[$i]."\n" ;
     print $file_h $names_jp[$i]."\n" ;
     $i++ ;

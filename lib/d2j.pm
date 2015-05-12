@@ -116,14 +116,14 @@ sub Translate_jp{
 
     sub TypeCar{
 	my $name = shift ;
-	if(undef($conf{"Type"})){
+	if(exists($conf{"Type"})){
 	    $$name = $conf{"Type"}{$$name}
 	}
     }
 
     sub SeriesCar{
 	my $name = shift ;
-	if(undef($conf{"Series"})){
+	if(exists($conf{"Series"})){
 	    $$name = $conf{"Series"}{$$name}
 	}
     }
