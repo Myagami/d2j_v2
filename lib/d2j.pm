@@ -130,7 +130,11 @@ sub Translate_jp{
 
     sub Car_Type{#車両型式
 	my $name = shift ;
-	$$name =  $conf{"Type"}{$$name} ;
+	if(exists($conf{"Type"}{$$name})){
+	    $$name =  $conf{"Type"}{$$name} ;
+	}else{
+	    $$name =  $$name ;
+	}
     }
 
     sub Name_Replace{#置換
